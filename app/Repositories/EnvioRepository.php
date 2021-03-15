@@ -18,9 +18,33 @@ class EnvioRepository extends BaseRepository
         $this->client = $client;
     }
 
+    public function countPalindrome()
+    {
+        $string = "afoolishconsistencyisthehobgoblinoflittlemindsadoredbylittlestatesmenandphilosophersanddivineswithconsistencyagreatsoulhassimplynothingtodohemayaswellconcernhimselfwithhisshadowonthewallspeakwhatyouthinknowinhardwordsandtomorrowspeakwhattomorrowthinksinhardwordsagainthoughitcontradicteverythingyousaidtodayahsoyoushallbesuretobemisunderstoodisitsobadthentobemisunderstoodpythagoraswasmisunderstoodandsocratesandjesusandlutherandcopernicusandgalileoandnewtonandeverypureandwisespiritthatevertookfleshtobegreatistobemisunderstood";
+        $count = 0;
+        for ($i = 0; $i < strlen($string); $i++) {
+            if ($this->equal(substr($string, $i))) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    private function equal($string)
+    {
+        if (strlen($string) < 2) {
+            return false;
+        }
+        return strcmp($string, strrev($string)) == 0 ? true : $this->equal(substr($string, 0, -1));
+    }
+
     public function shipment()
     {
-        $header = ['Accept' => 'application/json', 'api-key' => 'ea670047974b650bbcba5dd759baf1ed'];
+        $header = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'api-key' => 'ea670047974b650bbcba5dd759baf1ed'
+        ];
         $body = [
             "shipping_order" => [
                 "n_packages" => "1",
@@ -48,13 +72,28 @@ class EnvioRepository extends BaseRepository
                 ]
             ],
             "carrier" => [
-                "carrier_code" => "",
+                "carrier_code" => "BLX",
                 "tracking_number" => ""
             ]
         ];
         $payload = ['headers' => $header, 'body' => json_encode($body)];
         $response = $this->client->post("https://stage.api.enviame.io/api/s2/v2/companies/401/deliveries", $payload);
-        return $response->getBody()->getContents();
+        $data = json_decode($response->getBody()->getContents())->data;
+        return $this->model->create([
+            'shipment_id' => $data->identifier,
+            'imported_id' => $data->imported_id,
+            'tracking_number' => $data->tracking_number,
+            'status_id' => $data->status->id,
+            'customer_name' => $data->customer->full_name,
+            'customer_phone' => $data->customer->phone,
+            'shipping_address' => $data->shipping_address->full_address,
+            'shipping_place' => $data->shipping_address->place,
+            'shipping_country' => $data->country,
+            'carrier' => $data->carrier,
+            'service' => $data->service,
+            'barcodes' => $data->barcodes,
+            'deadline_at' => $data->deadline_at
+        ]);
     }
 
     private function fibonacci($range)
@@ -82,7 +121,6 @@ class EnvioRepository extends BaseRepository
             }
             $i++;
         }
-        echo $divisors . " " . $fibonacci;
         return $fibonacci;
     }
 
@@ -91,10 +129,7 @@ class EnvioRepository extends BaseRepository
         for ($i = 0; $i < $count; $i++) {
             $distance = rand(0, 2000);
             $range = intdiv($distance, 100);
-            $days = $this->fibonacci($range);
-            if ($distance < 100) {
-                $days = 0;
-            }
+            $days = $distance < 100 ? 0 : $this->fibonacci($range);
             echo "El envio será entregado en $days días\n";
         }
     }

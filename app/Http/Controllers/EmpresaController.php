@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateEmpresaRequest;
 use App\Repositories\EmpresaRepository;
-use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
 {
@@ -70,16 +69,5 @@ class EmpresaController extends Controller
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage());
         }
-    }
-
-    public function palindrome(Request $request)
-    {
-        //try {
-            return $this->success($this->model->countPalindrome($request->get('string')));
-            /*
-        } catch (\Exception $exception) {
-            return $this->error($exception->getMessage());
-        }
-            */
     }
 }

@@ -24,10 +24,10 @@ Route::group(['as' => 'api::'], function () {
         Route::put('update/{id}', 'EmpresaController@update')->name('update');
         Route::delete('delete/{id}', 'EmpresaController@delete')->name('delete');
         Route::get('get/{id}', 'EmpresaController@get')->name('get');
-        Route::post('palindrome', 'EmpresaController@palindrome')->name('palindrome');
     });
 
     Route::group(['prefix' => 'envio', 'as' => 'envio::'], function () {
+        Route::get('palindrome', 'EnvioController@palindrome')->name('palindrome');
         Route::post('shipment', 'EnvioController@shipment')->name('shipment');
         Route::get('fibonacci', 'EnvioController@dividerCount')->name('fibonacci');
         Route::get('tracking/{count}', 'EnvioController@tracking')->name('tracking');

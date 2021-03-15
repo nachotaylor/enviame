@@ -85,34 +85,4 @@ class EmpresaRepository extends BaseRepository
         $this->validateId($id);
         return $this->model->where('id', $id)->first();
     }
-
-    private function reverse($s)
-    {
-        $aux = [];
-        for ($i = 0, $len = strlen($s); $i <= $len; $i++)
-            array_push($aux, $s[$len - $i]);
-        return $aux;
-    }
-
-    private function isPalindrome($word, $words)
-    {
-        return $word === $this->reverse($word) && !strpos($words, $word) && strlen($word) > 1;
-    }
-
-    public function countPalindrome($s)
-    {
-        $subStrings = [];
-        $count = 0;
-        for ($i = 0; $i < strlen($s); $i++) {
-            for ($j = 0; $j < strlen($s) - $i; $j++) {
-                $subString = substr($s, $j, $j + $i + 1);
-                if ($this->isPalindrome($subString, $subStrings)) {
-                    array_push($subStrings, $subString);
-                    $count++;
-                }
-            }
-        }
-        return strlen($subStrings);
-        return $count;
-    }
 }

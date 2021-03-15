@@ -14,6 +14,18 @@ class EnvioController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function palindrome()
+    {
+        try {
+            return $this->success($this->model->countPalindrome());
+        } catch (\Exception $exception) {
+            return $this->error($exception->getMessage());
+        }
+    }
+
+    /**
      * Ejercicio 4
      * @return \Illuminate\Http\JsonResponse
      */
