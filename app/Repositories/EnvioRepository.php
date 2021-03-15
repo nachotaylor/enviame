@@ -98,10 +98,7 @@ class EnvioRepository extends BaseRepository
 
     private function fibonacci($range)
     {
-        if ($range < 2) {
-            return $range;
-        }
-        return $this->fibonacci($range - 1) + $this->fibonacci($range - 2);
+        return $range < 2 ? $range : $this->fibonacci($range - 1) + $this->fibonacci($range - 2);
     }
 
     public function dividerCount()
